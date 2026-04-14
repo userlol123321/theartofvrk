@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Art of VRK | Official Archive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@300;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #050505;
+            --accent-lime: #DFFF00; 
+            --accent-purple: #661bad;
+            --text-gray: #a0a0a0;
+            --glass-header: rgba(5, 5, 5, 0.6); /* Increased Translucency */
+            --glass-card: rgba(255, 255, 255, 0.03);
+        }
+
+        /* --- GLOBAL RESET --- */
+        * { cursor: crosshair; scroll-behavior: smooth; box-sizing: border-box; }
+
+        body {
+            margin: 0; background-color: var(--bg-dark); color: #fff;
+            font-family: 'JetBrains Mono', monospace; overflow-x: hidden;
+        }
+
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 3px, 3px 100%; pointer-events: none; z-index: 2000;
+        }
+
+        /* --- NAVIGATION (TRANSLUCENT) --- */
+        nav {
+            position: fixed; top: 0; width: 100%; display: flex;
+            justify-content: space-between; align-items: center;
+            padding: 1rem 5%; background: var(--glass-header); 
+            backdrop-filter: blur(8px); /* Soft blur for translucency */
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 3000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* --- LOGO (INCREASED SIZE) --- */
+        .brand-container { display: flex; align-items: center; gap: 20px; }
+        .nav-logo-box { width: 65px; height: 65px; perspective: 1000px; } /* Scaled up from 45px */
+        
+        .rotating-nav-logo {
+            width: 100%; height: 100%;
+            background: url('https://i.postimg.cc/y8HbKgWs/Untitled128-20230902013741.png') no-repeat center;
+            background-size: contain; animation: rotateY-3D 8s infinite linear;
+            filter: drop-shadow(0 0 12px var(--accent-lime));
+        }
+        @keyframes rotateY-3D { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(360deg); } }
+        .brand-name { font-size: 11px; letter-spacing: 2px; color: var(--accent-lime); }
+
+        .nav-links { display: flex; align-items: center; }
+        .nav-links a {
+            color: #fff; text-decoration: none; margin-left: 25px;
+            font-size: 11px; letter-spacing: 1px; transition: 0.3s;
+        }
+        .nav-links a:hover { color: var(--accent-lime); text-shadow: 0 0 8px var(--accent-lime); }
+
+        .menu-toggle { display: none; font-size: 1.8rem; color: var(--accent-lime); cursor: pointer; }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: block; z-index: 3001; }
+            .nav-links {
+                position: fixed; top: 0; right: -100%; height: 100vh; width: 80%;
+                background: rgba(10, 10, 10, 0.95); flex-direction: column; justify-content: center;
+                transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1); border-left: 1px solid var(--accent-lime);
+                backdrop-filter: blur(20px);
+            }
+            .nav-links.active { right: 0; }
+            .nav-links a { margin: 20px 0; font-size: 1.4rem; }
+        }
+
+        /* --- SECTIONS --- */
+        section { min-height: 100vh; padding: 160px 8% 60px 8%; border-bottom: 1px solid #111; }
+        h2 {
+            font-family: 'Archivo Black', sans-serif; font-size: clamp(2rem, 5vw, 3.5rem);
+            color: var(--accent-lime); text-transform: uppercase; margin-bottom: 2rem;
+        }
+
+        /* --- HERO --- */
+        #landing {
+            display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+            background: linear-gradient(rgba(0,0,0,0.5), var(--bg-dark)), url('https://i.postimg.cc/pTJ6pP7T/IMG-2609.png') no-repeat;
+            background-size: cover; background-position: center;
+        }
+        .hero-title {
+            font-family: 'Archivo Black', sans-serif; font-size: clamp(3rem, 15vw, 8rem);
+            margin: 0; line-height: 0.85; text-shadow: 4px 4px var(--accent-purple);
+        }
+
+        .explore-btn {
+            display: inline-block; padding: 18px 50px; border: 1px solid #fff; 
+            color: #fff; text-decoration: none; margin: 35px 0; 
+            font-size: 11px; letter-spacing: 4px; transition: 0.4s;
+        }
+        .explore-btn:hover {
+            background: var(--accent-lime); color: #000; border-color: var(--accent-lime);
+            box-shadow: 0 0 25px var(--accent-lime); transform: translateY(-3px);
+        }
+
+        /* --- IDENTITY --- */
+        .identity-box { 
+            display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; align-items: center; 
+            border: 1px solid #222; padding: clamp(20px, 5%, 50px); background: rgba(255,255,255,0.01); 
+        }
+        .bio-text { font-size: 1.1rem; line-height: 1.8; color: var(--text-gray); text-align: justify; }
+        .bio-text b { color: var(--accent-lime); }
+
+        .identity-photo-frame { 
+            border: 1px solid var(--accent-purple); padding: 15px; background: #000; 
+            overflow: hidden; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .identity-photo-frame:hover { border-color: var(--accent-lime); box-shadow: 0 0 30px rgba(223, 255, 0, 0.2); transform: scale(1.02); }
+        .identity-photo-frame img { width: 100%; height: auto; filter: grayscale(1); transition: 0.8s ease; }
+        .identity-photo-frame:hover img { filter: grayscale(0); transform: scale(1.05); }
+
+        /* --- STORE --- */
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 30px; }
+        .product-card { background: var(--glass-card); border: 1px solid #222; padding: 25px; text-align: center; transition: 0.3s; }
+        .product-card:hover { border-color: var(--accent-lime); transform: translateY(-5px); }
+        .product-card img { width: 150px; height: 150px; object-fit: contain; filter: grayscale(1); margin-bottom: 15px; transition: 0.3s;}
+        .product-card:hover img { filter: grayscale(0); }
+        .product-btn {
+            display: block; padding: 12px; border: 1px solid #444; color: #fff;
+            text-decoration: none; font-size: 10px; transition: 0.3s;
+        }
+        .product-btn:hover { background: var(--accent-lime); color: #000; border-color: var(--accent-lime); }
+
+        /* --- MASONRY --- */
+        .masonry { column-count: 3; column-gap: 15px; }
+        .masonry-item { background: #111; margin-bottom: 15px; padding: 10px; display: inline-block; width: 100%; border: 1px solid #222; }
+        .masonry-item img { width: 100%; filter: grayscale(1); transition: 0.4s; }
+        .masonry-item:hover img { filter: grayscale(0); }
+
+        .status-tag {
+            font-family: 'JetBrains Mono'; font-size: 0.75rem; color: var(--accent-lime);
+            border: 1px solid var(--accent-lime); padding: 8px 15px; letter-spacing: 2px; text-transform: uppercase;
+        }
+
+        /* --- FOOTER (INCREASED FONT SIZE) --- */
+        footer { 
+            padding: 80px 20px; text-align: center; 
+            font-size: 12px; /* Increased from 9px */
+            color: #666; border-top: 1px solid #111; 
+            letter-spacing: 2px;
+        }
+        .footer-link { color: var(--accent-lime); font-size: 2rem; margin-left: 20px; vertical-align: middle; transition: 0.3s; display: inline-block;}
+        .footer-link:hover { filter: drop-shadow(0 0 10px var(--accent-lime)); transform: scale(1.1); color: #fff; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="brand-container">
+        <div class="nav-logo-box"><div class="rotating-nav-logo"></div></div>
+        <div class="brand-name">THE ART OF VRK // V3.3</div>
+    </div>
+    <div class="menu-toggle" id="mobile-menu"><i class="fas fa-bars"></i></div>
+    <div class="nav-links" id="nav-content">
+        <a href="#store">STORE</a>
+        <a href="#portfolio">PORTFOLIO</a>
+        <a href="#identity">IDENTITY</a>
+    </div>
+</nav>
+
+<section id="landing">
+    <h1 class="hero-title">THE ART<br>OF VRK</h1>
+    <a href="#store" class="explore-btn">EXPLORE_ARCHIVE</a>
+    <div class="status-tag">LOCATION: //CLASSIFIED//</div>
+</section>
+
+<section id="identity">
+    <h2>Identity</h2>
+    <div class="identity-box">
+        <div class="bio-text">
+            In a world that shuns the <b>dark and gothic</b>, The Art of <b>Vikrant R. Kale</b> welcomes with open arms and embraces all of that which is <b>dark, brooding, weird</b> and just plain gothic. 
+            <br><br>
+            Heavily inspired by <b>comic books, rock & metal music</b>, theartofvrk specializes in <b>Pen and Ink illustrations</b> but dabbles in multidisciplinary arts. Every stroke is a testament to the beauty found in the shadows.
+        </div>
+        <div class="identity-photo-frame">
+            <img src="https://i.postimg.cc/Y0L0k2b7/VRK-portrait.png" alt="Vikrant R. Kale">
+        </div>
+    </div>
+</section>
+
+<section id="store">
+    <h2>Commercial Archive</h2>
+    <div style="margin-bottom: 40px;">
+        <input type="text" id="asset-search" placeholder="ENTER KEYWORD..." style="width: 100%; max-width: 400px; background: rgba(255,255,255,0.05); border: 1px solid #333; padding: 15px; color: var(--accent-lime); outline: none; font-family: 'JetBrains Mono';">
+    </div>
+    <div class="product-grid" id="product-container">
+        <div class="status-tag">SYNCING_DATA...</div>
+    </div>
+</section>
+
+<section id="portfolio">
+    <h2>Artifacts (NOT FOR SALE)</h2>   
+    <div class="masonry">
+        <div class="masonry-item"><img src="https://i.postimg.cc/vmT5DNLQ/ART-1.jpg"></div>
+        <div class="masonry-item"><img src="https://i.postimg.cc/d32yzPvf/Art-2.jpg"></div>
+        <div class="masonry-item"><img src="https://i.postimg.cc/htPd35YJ/Art-3.jpg"></div>
+        <div class="masonry-item"><img src="https://i.postimg.cc/5ySXsBqm/Art-4.jpg"></div>
+        <div class="masonry-item"><img src="https://i.postimg.cc/bYZ8LHLz/Art-5.jpg"></div>
+        <div class="masonry-item"><img src="https://i.postimg.cc/wv0vJqq9/Art-6.jpg"></div>
+    </div>
+</section>
+
+<script>
+    const menuToggle = document.getElementById('mobile-menu');
+    const navContent = document.getElementById('nav-content');
+
+    menuToggle.addEventListener('click', () => {
+        navContent.classList.toggle('active');
+        const icon = menuToggle.querySelector('i');
+        icon.classList.toggle('fa-bars');
+        icon.classList.toggle('fa-times');
+    });
+
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            navContent.classList.remove('active');
+            menuToggle.querySelector('i').classList.add('fa-bars');
+            menuToggle.querySelector('i').classList.remove('fa-times');
+        });
+    });
+
+    const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRwI2xQVZ6yca9F45Mg1ce-vMJ95teHcHLBZk7cwrTI6GVykKZcOzIF5fkjH_pn-lEr7jOTkzJr7wo7/pub?gid=0&single=true&output=csv";
+    const PROXY = "https://corsproxy.io/?";
+    let globalProducts = [];
+
+    async function loadProducts() {
+        try {
+            const finalUrl = PROXY + encodeURIComponent(SHEET_URL + "&t=" + Date.now());
+            const response = await fetch(finalUrl);
+            const csvText = await response.text();
+            const rows = csvText.split('\n').slice(1);
+            
+            globalProducts = rows.map(row => {
+                const columns = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                if (columns.length < 5) return null;
+                return {
+                    title: columns[0].trim(),
+                    price: columns[1].trim(),
+                    desc: columns[2].trim(),
+                    img: columns[3].trim(),
+                    pay: columns[4].trim()
+                };
+            }).filter(item => item !== null);
+            displayProducts(globalProducts);
+        } catch (err) {
+            document.getElementById('product-container').innerHTML = '<div class="status-tag" style="color:red;">OFFLINE</div>';
+        }
+    }
+
+    function displayProducts(products) {
+        const container = document.getElementById('product-container');
+        container.innerHTML = products.map(item => `
+            <div class="product-card">
+                <img src="${item.img}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/150'">
+                <h4 style="margin:0; font-size: 13px;">${item.title.toUpperCase()}</h4>
+                <span class="price">₹${item.price}</span>
+                <a href="product.html?title=${encodeURIComponent(item.title)}&price=${item.price}&img=${encodeURIComponent(item.img)}&desc=${encodeURIComponent(item.desc)}&pay=${encodeURIComponent(item.pay)}" class="product-btn">VIEW_ASSET</a>
+            </div>
+        `).join('');
+    }
+
+    document.getElementById('asset-search').addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        displayProducts(globalProducts.filter(p => p.title.toLowerCase().includes(term)));
+    });
+
+    window.addEventListener('DOMContentLoaded', loadProducts);
+</script>
+
+<footer>
+    &copy; 2026 THE ART OF VRK // ARCHIVE_V3.3 // 
+    <a href="https://www.instagram.com/theartofvrk" target="_blank" class="footer-link">
+        <i class="fab fa-instagram"></i>
+    </a>
+</footer>
+
+</body>
+</html>
