@@ -12,7 +12,7 @@
             --accent-lime: #DFFF00; 
             --accent-purple: #661bad;
             --text-gray: #a0a0a0;
-            --glass-header: rgba(5, 5, 5, 0.6); /* Increased Translucency */
+            --glass-header: rgba(5, 5, 5, 0.6);
             --glass-card: rgba(255, 255, 255, 0.03);
         }
 
@@ -31,20 +31,17 @@
             background-size: 100% 3px, 3px 100%; pointer-events: none; z-index: 2000;
         }
 
-        /* --- NAVIGATION (TRANSLUCENT) --- */
+        /* --- NAVIGATION --- */
         nav {
             position: fixed; top: 0; width: 100%; display: flex;
             justify-content: space-between; align-items: center;
             padding: 1rem 5%; background: var(--glass-header); 
-            backdrop-filter: blur(8px); /* Soft blur for translucency */
-            -webkit-backdrop-filter: blur(8px);
-            z-index: 3000;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            z-index: 3000; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* --- LOGO (INCREASED SIZE) --- */
         .brand-container { display: flex; align-items: center; gap: 20px; }
-        .nav-logo-box { width: 65px; height: 65px; perspective: 1000px; } /* Scaled up from 45px */
+        .nav-logo-box { width: 65px; height: 65px; perspective: 1000px; }
         
         .rotating-nav-logo {
             width: 100%; height: 100%;
@@ -134,20 +131,48 @@
 
         /* --- MASONRY --- */
         .masonry { column-count: 3; column-gap: 15px; }
-        .masonry-item { background: #111; margin-bottom: 15px; padding: 10px; display: inline-block; width: 100%; border: 1px solid #222; }
+        .masonry-item { 
+            background: #111; margin-bottom: 15px; padding: 10px; 
+            display: inline-block; width: 100%; border: 1px solid #222; 
+            cursor: zoom-in; /* Change cursor to indicate zoomability */
+        }
         .masonry-item img { width: 100%; filter: grayscale(1); transition: 0.4s; }
         .masonry-item:hover img { filter: grayscale(0); }
+        @media (max-width: 900px) { .masonry { column-count: 2; } }
+        @media (max-width: 600px) { .masonry { column-count: 1; } }
+
+        /* --- LIGHTBOX MODAL (ZOOM FUNCTIONALITY) --- */
+        .lightbox {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.95); display: none;
+            justify-content: center; align-items: center; z-index: 5000;
+            backdrop-filter: blur(10px);
+        }
+        .lightbox.active { display: flex; animation: fadeIn 0.3s ease; }
+        .lightbox img { 
+            max-width: 90%; max-height: 85%; 
+            border: 1px solid var(--accent-lime);
+            box-shadow: 0 0 50px rgba(223, 255, 0, 0.1);
+            transform: scale(0.9); transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .lightbox.active img { transform: scale(1); }
+        .close-lightbox {
+            position: absolute; top: 30px; right: 40px;
+            color: var(--accent-lime); font-size: 2rem; cursor: pointer;
+            transition: 0.3s;
+        }
+        .close-lightbox:hover { transform: rotate(90deg); color: #fff; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .status-tag {
             font-family: 'JetBrains Mono'; font-size: 0.75rem; color: var(--accent-lime);
             border: 1px solid var(--accent-lime); padding: 8px 15px; letter-spacing: 2px; text-transform: uppercase;
         }
 
-        /* --- FOOTER (INCREASED FONT SIZE) --- */
         footer { 
             padding: 80px 20px; text-align: center; 
-            font-size: 12px; /* Increased from 9px */
-            color: #666; border-top: 1px solid #111; 
+            font-size: 12px; color: #666; border-top: 1px solid #111; 
             letter-spacing: 2px;
         }
         .footer-link { color: var(--accent-lime); font-size: 2rem; margin-left: 20px; vertical-align: middle; transition: 0.3s; display: inline-block;}
@@ -155,6 +180,11 @@
     </style>
 </head>
 <body>
+
+<div class="lightbox" id="lightbox">
+    <span class="close-lightbox" id="close-btn">&times;</span>
+    <img src="" id="lightbox-img">
+</div>
 
 <nav>
     <div class="brand-container">
@@ -202,12 +232,12 @@
 <section id="portfolio">
     <h2>Artifacts (NOT FOR SALE)</h2>   
     <div class="masonry">
-        <div class="masonry-item"><img src="https://i.postimg.cc/vmT5DNLQ/ART-1.jpg"></div>
-        <div class="masonry-item"><img src="https://i.postimg.cc/d32yzPvf/Art-2.jpg"></div>
-        <div class="masonry-item"><img src="https://i.postimg.cc/htPd35YJ/Art-3.jpg"></div>
-        <div class="masonry-item"><img src="https://i.postimg.cc/5ySXsBqm/Art-4.jpg"></div>
-        <div class="masonry-item"><img src="https://i.postimg.cc/bYZ8LHLz/Art-5.jpg"></div>
-        <div class="masonry-item"><img src="https://i.postimg.cc/wv0vJqq9/Art-6.jpg"></div>
+        <div class="masonry-item" onclick="zoomImage(this)"><img src="https://i.postimg.cc/vmT5DNLQ/ART-1.jpg"></div>
+        <div class="masonry-item" onclick="zoomImage(this)"><img src="https://i.postimg.cc/d32yzPvf/Art-2.jpg"></div>
+        <div class="masonry-item" onclick="zoomImage(this)"><img src="https://i.postimg.cc/htPd35YJ/Art-3.jpg"></div>
+        <div class="masonry-item" onclick="zoomImage(this)"><img src="https://i.postimg.cc/5ySXsBqm/Art-4.jpg"></div>
+        <div class="masonry-item" onclick="zoomImage(this)"><img src="https://i.postimg.cc/bYZ8LHLz/Art-5.jpg"></div>
+        <div class="masonry-item" onclick="zoomImage(this)"><img src="https://i.postimg.cc/wv0vJqq9/Art-6.jpg"></div>
     </div>
 </section>
 
@@ -230,6 +260,31 @@
         });
     });
 
+    /* --- LIGHTBOX LOGIC --- */
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const closeBtn = document.getElementById('close-btn');
+
+    function zoomImage(element) {
+        const imgSrc = element.querySelector('img').src;
+        lightboxImg.src = imgSrc;
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Stop scrolling when zoomed
+    }
+
+    closeBtn.onclick = () => {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    };
+
+    lightbox.onclick = (e) => {
+        if (e.target !== lightboxImg) {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    };
+
+    /* --- GOOGLE SHEETS STORE LOGIC --- */
     const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRwI2xQVZ6yca9F45Mg1ce-vMJ95teHcHLBZk7cwrTI6GVykKZcOzIF5fkjH_pn-lEr7jOTkzJr7wo7/pub?gid=0&single=true&output=csv";
     const PROXY = "https://corsproxy.io/?";
     let globalProducts = [];
