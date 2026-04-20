@@ -14,7 +14,6 @@
             --glass: rgba(255, 255, 255, 0.03);
         }
 
-        /* --- CORE --- */
         * { cursor: crosshair; box-sizing: border-box; -webkit-user-select: none; user-select: none; }
         
         body {
@@ -24,7 +23,6 @@
             display: flex; justify-content: center; align-items: center;
         }
 
-        /* Scanline Overlay Aesthetic */
         body::before {
             content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
@@ -33,77 +31,43 @@
         }
 
         .product-container {
-            display: flex; gap: 50px; background: var(--glass);
-            border: 1px solid #1a1a1a; padding: 50px;
+            display: flex; gap: 60px; background: var(--glass);
+            border: 1px solid #111; padding: 60px;
             position: relative; transform-style: preserve-3d;
-            max-width: 1000px; width: 90%;
+            max-width: 1100px; width: 90%;
             transition: transform 0.1s ease-out;
         }
 
         .image-display {
-            flex: 1; border: 1px solid #222; background: #000;
-            padding: 30px; display: flex; align-items: center; justify-content: center;
-            transform: translateZ(30px); box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            flex: 1; border: 1px solid #1a1a1a; background: #000;
+            padding: 40px; display: flex; align-items: center; justify-content: center;
+            transform: translateZ(40px); box-shadow: 0 30px 60px rgba(0,0,0,0.6);
         }
 
-        .image-display img {
-            max-width: 100%; height: auto;
-            filter: drop-shadow(0 0 15px rgba(223, 255, 0, 0.1));
-        }
+        .image-display img { max-width: 100%; height: auto; filter: drop-shadow(0 0 20px rgba(223, 255, 0, 0.15)); }
 
-        .details-panel {
-            flex: 1; display: flex; flex-direction: column;
-            justify-content: center; transform: translateZ(50px);
-        }
+        .details-panel { flex: 1; display: flex; flex-direction: column; justify-content: center; transform: translateZ(60px); }
 
         .status-tag {
-            font-size: 10px; color: var(--accent-lime);
-            border: 1px solid var(--accent-lime);
-            padding: 5px 12px; margin-bottom: 20px;
-            width: fit-content; letter-spacing: 2px;
+            font-size: 10px; color: var(--accent-lime); border: 1px solid var(--accent-lime);
+            padding: 6px 15px; margin-bottom: 25px; width: fit-content; letter-spacing: 3px;
         }
 
-        h1 {
-            font-family: 'Archivo Black', sans-serif;
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
-            margin: 0 0 10px 0; text-transform: uppercase;
-        }
-
-        .price-tag {
-            font-size: 1.8rem; color: var(--accent-lime);
-            margin-bottom: 20px; font-weight: bold;
-        }
-
-        .description {
-            color: var(--text-gray); font-size: 0.9rem;
-            line-height: 1.6; margin-bottom: 30px;
-            border-left: 2px solid var(--accent-purple);
-            padding-left: 20px;
-        }
+        h1 { font-family: 'Archivo Black', sans-serif; font-size: 3rem; margin: 0 0 15px 0; text-transform: uppercase; line-height: 1; }
+        .price-tag { font-size: 2rem; color: var(--accent-lime); margin-bottom: 25px; font-weight: bold; }
+        .description { color: var(--text-gray); font-size: 0.95rem; line-height: 1.8; margin-bottom: 40px; border-left: 2px solid var(--accent-purple); padding-left: 25px; }
 
         .acquire-btn {
-            background: var(--accent-lime); color: #000;
-            text-decoration: none; padding: 15px 30px;
-            font-weight: bold; text-align: center;
-            letter-spacing: 2px; transition: 0.3s;
-            border: 1px solid var(--accent-lime);
+            background: var(--accent-lime); color: #000; text-decoration: none; padding: 20px 40px;
+            font-weight: bold; text-align: center; letter-spacing: 3px; transition: 0.4s; border: 1px solid var(--accent-lime);
         }
+        .acquire-btn:hover { background: transparent; color: var(--accent-lime); box-shadow: 0 0 30px var(--accent-lime); }
 
-        .acquire-btn:hover {
-            background: transparent; color: var(--accent-lime);
-            box-shadow: 0 0 20px rgba(223, 255, 0, 0.4);
-        }
-
-        .back-link {
-            position: absolute; top: -40px; left: 0;
-            color: #555; text-decoration: none;
-            font-size: 10px; letter-spacing: 2px;
-        }
-
+        .back-link { position: absolute; top: -50px; left: 0; color: #444; text-decoration: none; font-size: 11px; letter-spacing: 3px; }
         .back-link:hover { color: #fff; }
 
-        @media (max-width: 768px) {
-            .product-container { flex-direction: column; padding: 30px; height: 90vh; overflow-y: auto; }
+        @media (max-width: 850px) {
+            .product-container { flex-direction: column; padding: 40px; height: 90vh; overflow-y: auto; }
             body { overflow-y: auto; }
         }
     </style>
@@ -118,18 +82,17 @@
         </div>
 
         <div class="details-panel">
-            <div class="status-tag">STATUS: AVAILABLE // GEN_ID: 0X_VRK</div>
+            <div class="status-tag" id="product-cat">STATUS: LOADING...</div>
             <h1 id="product-title">LOADING...</h1>
             <div class="price-tag" id="product-price">₹--</div>
             <div class="description" id="product-desc">
-                Establishing neural link to cloud data...
+                Establishing neural link...
             </div>
             <a href="#" id="buy-link" class="acquire-btn">ACQUIRE_ASSET</a>
         </div>
     </div>
 
     <script>
-        // 1. DATA INITIALIZATION FROM SPREADSHEET URL PARAMS
         const params = new URLSearchParams(window.location.search);
         
         const title = params.get('title');
@@ -137,37 +100,38 @@
         const img = params.get('img');
         const desc = params.get('desc');
         const pay = params.get('pay');
+        const cat = params.get('cat');
 
         if (title) {
             document.title = `${title} | VRK ARCHIVE`;
             document.getElementById('product-title').innerText = title;
             document.getElementById('product-price').innerText = `₹${price}`;
-            document.getElementById('product-img').src = img;
+            document.getElementById('product-img').src = decodeURIComponent(img);
             
-            // Fix for description formatting (handling the × and special characters)
+            // Fixed Detail Page Category Display
+            const displayCat = cat ? decodeURIComponent(cat).trim().toUpperCase() : 'UNKNOWN';
+            document.getElementById('product-cat').innerText = `STATUS: AVAILABLE // CLASS: ${displayCat}`;
+            
             document.getElementById('product-desc').innerText = decodeURIComponent(desc).replace(/"/g, '');
             
-            // Initialize the Payment Link (Column E)
             const buyBtn = document.getElementById('buy-link');
             if (pay && pay !== "undefined" && pay !== "") {
-                buyBtn.href = pay;
+                buyBtn.href = decodeURIComponent(pay);
                 buyBtn.target = "_blank";
             } else {
                 buyBtn.innerText = "LINK_UNAVAILABLE";
-                buyBtn.style.opacity = "0.5";
+                buyBtn.style.opacity = "0.4";
                 buyBtn.style.pointerEvents = "none";
             }
         }
 
-        // 2. 3D TILT ENGINE
         const card = document.getElementById('tilt-card');
         document.addEventListener('mousemove', (e) => {
-            let xAxis = (window.innerWidth / 2 - e.pageX) / 50;
-            let yAxis = (window.innerHeight / 2 - e.pageY) / 50;
+            let xAxis = (window.innerWidth / 2 - e.pageX) / 60;
+            let yAxis = (window.innerHeight / 2 - e.pageY) / 60;
             card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
         });
 
-        // Reset on mouse leave
         document.addEventListener('mouseleave', () => {
             card.style.transform = `rotateY(0deg) rotateX(0deg)`;
         });
